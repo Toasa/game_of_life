@@ -86,6 +86,21 @@ func (g *Game) draw() {
         }
         g.s.FillRect(&grid, COLOR_GRID)
     }
+
+    // Draw cell.
+    for i := 0; i < BOARD_HEIGHT; i++ {
+        for j := 0; j < BOARD_WIDTH; j++ {
+            if g.b[i][j] {
+                cell := sdl.Rect {
+                    int32((CELL_LEN+GRID_WIDTH_LEN)*j + GRID_WIDTH_LEN),
+                    int32((CELL_LEN+GRID_WIDTH_LEN)*i + GRID_WIDTH_LEN),
+                    CELL_LEN,
+                    CELL_LEN,
+                }
+                g.s.FillRect(&cell, COLOR_CELL)
+            }
+        }
+    }
 }
 
 
