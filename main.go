@@ -28,6 +28,7 @@ type Pattern uint8
 const (
     Glider Pattern = iota
     Spaceship
+    QueenBee
 )
 
 type State uint8
@@ -136,6 +137,35 @@ func (g *Game) set(p Pattern) {
         g.b[5][4] = true
         g.b[5][5] = true
         g.b[5][6] = true
+    case QueenBee:
+        g.b[4][15] = true
+        g.b[5][14] = true
+        g.b[5][15] = true
+        g.b[6][13] = true
+        g.b[6][14] = true
+        g.b[6][19] = true
+        g.b[6][20] = true
+        g.b[7][3] = true
+        g.b[7][4] = true
+        g.b[7][12] = true
+        g.b[7][13] = true
+        g.b[7][14] = true
+        g.b[7][19] = true
+        g.b[7][20] = true
+        g.b[7][23] = true
+        g.b[7][24] = true
+        g.b[8][3] = true
+        g.b[8][4] = true
+        g.b[8][13] = true
+        g.b[8][14] = true
+        g.b[8][19] = true
+        g.b[8][20] = true
+        g.b[8][23] = true
+        g.b[8][24] = true
+        g.b[9][14] = true
+        g.b[9][15] = true
+        g.b[10][15] = true
+
     default:
         panic(fmt.Sprintf("Undefined pattern: %s", p))
     }
@@ -215,7 +245,7 @@ func main() {
         panic(err)
     }
 
-    g.set(Spaceship)
+    g.set(QueenBee)
 
     running := true
     for running {
