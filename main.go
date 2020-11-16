@@ -2,6 +2,7 @@ package main
 
 import (
     "fmt"
+    "time"
     "github.com/veandco/go-sdl2/sdl"
 )
 
@@ -26,6 +27,14 @@ const (
 type Pattern uint8
 const (
     Glider Pattern = iota
+)
+
+type State uint8
+const (
+    Reproduction State = iota
+    Underpopulation
+    Overpopulation
+    Unchanged
 )
 
 type Board [BOARD_HEIGHT][BOARD_WIDTH]bool
@@ -121,6 +130,74 @@ func (g *Game) set(p Pattern) {
     }
 }
 
+func (g *Game) getState(h, w int) State {
+    neighbors := func(h, w int) [][2]int {
+        ngbrs := [][2]int{}
+
+        for i:= -1; i <= 1; i++ {
+            for j := -1; j <= 1; j++ {
+                if i == 0 && j == 0 {
+                    continue
+                }
+
+                h_i := h + i
+                w_j := w + j
+
+                if h_i < 0 || w_j < 0 || h_i >= BOARD_HEIGHT || w_j >= BOARD_WIDTH {
+                    continue
+                }
+
+                ngbrs = append(ngbrs, [2]int{ h_i, w_j })
+            }
+        }
+
+        return ngbrs
+    }(h, w)
+
+    liveCellCount := func(ngbrs [][2]int) int {
+        cnt := 0
+        for _, ngbr := range ngbrs {
+            if g.b[ngbr[0]][ngbr[1]] {
+                cnt++
+            }
+        }
+        return cnt
+    }(neighbors)
+
+    if g.b[h][w] {
+        if liveCellCount == 2 || liveCellCount == 3 {
+            return Unchanged
+        } else if liveCellCount >= 4 {
+            return Overpopulation
+        } else if liveCellCount <= 1 {
+            return Underpopulation
+        }
+    } else {
+        if liveCellCount == 3 {
+            return Reproduction
+        }
+    }
+
+    return Unchanged
+}
+
+func (g *Game) transition() {
+    nextBoard := g.b
+    for i := 0; i < BOARD_HEIGHT; i++ {
+        for j := 0; j < BOARD_WIDTH; j++ {
+            s := g.getState(i, j)
+            switch s {
+            case Reproduction:
+                nextBoard[i][j] = true
+            case Underpopulation, Overpopulation:
+                nextBoard[i][j] = false
+            case Unchanged:
+            }
+        }
+    }
+    g.b = nextBoard
+}
+
 func main() {
     g, err := newGame()
     if err != nil {
@@ -129,11 +206,12 @@ func main() {
 
     g.set(Glider)
 
-    g.draw()
-    g.update()
-
     running := true
     for running {
+        g.draw()
+        g.update()
+        g.transition()
+        time.Sleep(time.Second)
         for e := sdl.PollEvent(); e != nil; e = sdl.PollEvent() {
             switch e.(type) {
             case *sdl.QuitEvent:
