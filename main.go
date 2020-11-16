@@ -211,7 +211,7 @@ func main() {
         g.draw()
         g.update()
         g.transition()
-        time.Sleep(time.Second)
+        time.Sleep(time.Millisecond * 100)
         for e := sdl.PollEvent(); e != nil; e = sdl.PollEvent() {
             switch e.(type) {
             case *sdl.QuitEvent:
