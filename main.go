@@ -23,6 +23,11 @@ const (
     COLOR_CELL = 0x00000000
 )
 
+type Pattern uint8
+const (
+    Glider Pattern = iota
+)
+
 type Board [BOARD_HEIGHT][BOARD_WIDTH]bool
 
 type Game struct {
@@ -103,12 +108,26 @@ func (g *Game) draw() {
     }
 }
 
+func (g *Game) set(p Pattern) {
+    switch p {
+    case Glider:
+        g.b[2][4] = true
+        g.b[3][5] = true
+        g.b[4][3] = true
+        g.b[4][4] = true
+        g.b[4][5] = true
+    default:
+        panic(fmt.Sprintf("Undefined pattern: %s", p))
+    }
+}
 
 func main() {
     g, err := newGame()
     if err != nil {
         panic(err)
     }
+
+    g.set(Glider)
 
     g.draw()
     g.update()
