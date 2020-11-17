@@ -10,7 +10,7 @@ import (
 const (
     WINDOW_NAME = "game of life"
 
-    BOARD_HEIGHT = 30
+    BOARD_HEIGHT = 70
     BOARD_WIDTH = 70
 
     CELL_LEN = 10
