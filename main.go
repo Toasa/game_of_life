@@ -191,7 +191,7 @@ func (g *Game) set(p Pattern) {
     }
 }
 
-func (g *Game) getState(h, w int) State {
+func (g *Game) getCellState(h, w int) State {
     neighbors := func(h, w int) [][2]int {
         ngbrs := [][2]int{}
 
@@ -246,7 +246,7 @@ func (g *Game) transition() {
     nextBoard := g.b
     for i := 0; i < BOARD_HEIGHT; i++ {
         for j := 0; j < BOARD_WIDTH; j++ {
-            s := g.getState(i, j)
+            s := g.getCellState(i, j)
             switch s {
             case Reproduction:
                 nextBoard[i][j] = true
