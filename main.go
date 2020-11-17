@@ -28,6 +28,7 @@ const (
 type Pattern uint8
 const (
     Glider Pattern = iota
+    GliderGun
     Spaceship
     QueenBee
 )
@@ -38,6 +39,20 @@ const FigGlider string =
 ....#.
 .....#
 ...###`
+
+const FigGliderGun string =
+`.......................................
+.......................................
+.......................................
+...........................#...........
+.........................#.#...........
+...............##......##............##
+..............#...#....##............##
+...##........#.....#...##..............
+...##........#...#.##....#.#...........
+.............#.....#.......#...........
+..............#...#....................
+...............##......................`
 
 const FigSpaceship string =
 `.......
@@ -154,6 +169,8 @@ func (g *Game) set(p Pattern) {
     switch p {
     case Glider:
         fig = FigGlider
+    case GliderGun:
+        fig = FigGliderGun
     case Spaceship:
         fig = FigSpaceship
     case QueenBee:
@@ -248,7 +265,7 @@ func main() {
         panic(err)
     }
 
-    g.set(Glider)
+    g.set(GliderGun)
 
     running := true
     for running {
